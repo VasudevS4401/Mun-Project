@@ -26,7 +26,7 @@ const HomePage: React.FC = () => {
       {/* Hero Section */}
       <section className="h-screen relative">
         <Image
-          src="/hero.jpg"
+          src="/hero.png"
           alt="Conference Hero"
           fill
           className="object-cover"
@@ -44,7 +44,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* About Section */}
-      <section className="min-h-screen flex items-center px-10 md:px-20 py-20 bg-gray-50">
+      <section className="min-h-screen flex items-center px-10 md:px-20 py-20 ">
         <div className="flex flex-col md:flex-row items-center gap-10 w-full">
           <div className="md:w-1/2 flex justify-center">
             <Image
@@ -55,7 +55,7 @@ const HomePage: React.FC = () => {
               className="object-contain"
             />
           </div>
-          <div className="md:w-1/2 bg-white shadow-lg rounded-2xl p-8">
+          <div className="md:w-1/2 shadow-lg rounded-2xl p-8">
             <h2 className="text-3xl font-bold mb-4">About Us</h2>
             <p className="text-gray-700 leading-relaxed">
               Welcome to the MUN Conference 2025. Delegates from across the
@@ -67,7 +67,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Committees Section */}
-      <section className="min-h-screen bg-white py-20 px-10 md:px-20">
+      <section className="min-h-screen py-20 px-10 md:px-20">
         <h2 className="text-4xl font-bold text-center mb-12">Committees</h2>
         <Slider {...carouselSettings}>
           {committees.map((c, i) => (
@@ -81,7 +81,7 @@ const HomePage: React.FC = () => {
                   alt={c.name}
                   width={400}
                   height={250}
-                  className="w-full h-64 object-cover"
+                  className="w-full h-64 object-contain scale-75"
                 />
                 <div className="absolute inset-0 bg-black/70 opacity-0 hover:opacity-100 transition flex flex-col justify-center items-center text-white p-6 text-center">
                   <h3 className="text-2xl font-semibold mb-2">{c.name}</h3>
@@ -115,7 +115,7 @@ const HomePage: React.FC = () => {
             {secretariat.map((s, i) => (
               <div
                 key={i}
-                className="bg-white rounded-2xl shadow-md p-4 flex flex-col items-center text-center"
+                className=" rounded-2xl shadow-md p-4 flex flex-col items-center text-center"
               >
                 <Image
                   src={s.img}
@@ -137,9 +137,9 @@ const HomePage: React.FC = () => {
 
 // Example data
 const committees = [
-  { name: "UNSC", desc: "Security Council discussions", img: "/committee1.jpg" },
-  { name: "UNHRC", desc: "Human Rights Council", img: "/committee2.jpg" },
-  { name: "WHO", desc: "World Health Organization", img: "/committee3.jpg" },
+  { name: "UNSC", desc: "Security Council discussions", img: "/UNSC.png" },
+  { name: "UNHRC", desc: "Human Rights Council", img: "/UNHC.png" },
+  { name: "WHO", desc: "World Health Organization", img: "/WHO.png" },
 ];
 
 const secretariat = [

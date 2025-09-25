@@ -83,7 +83,7 @@ header ul {
 }
 
 header li a {
-  color: #fbffe9;
+  color: #434c1b;
   padding: 8px 14px;
   font-weight: 500;
   border-radius: 8px;
@@ -95,7 +95,7 @@ main {
   width: 100%;
   height: 100%;
   padding: 0px;
-  background: #fbffe9;
+  background: transparent;
   border-radius: 0px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   animation: fadeIn 0.6s ease-in-out;

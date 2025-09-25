@@ -80,9 +80,9 @@ const styles: {
   footer: React.CSSProperties;
 } = {
   header: {
-    backgroundColor: "#333",
+    backgroundColor: "#fff",
     padding: "10px 20px",
-    color: "#fff",
+    color: "#000",
   },
   navList: {
     listStyleType: "none",
