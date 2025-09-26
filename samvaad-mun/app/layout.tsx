@@ -9,9 +9,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollYRef = useRef(0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState<boolean>(() =>
-    typeof window !== "undefined" ? window.innerWidth < 768 : false
-  );
+
+  // Hydration-safe flag
+  const [isClient, setIsClient] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true); // we are now on client
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Scroll hide/show header
   useEffect(() => {
@@ -24,22 +33,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       }
       lastScrollYRef.current = currentScrollY;
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Track window width
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-      if (!mobile) setMenuOpen(false);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const onNavClick = () => setMenuOpen(false);
@@ -60,8 +55,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             }}
           >
             <nav style={styles.nav}>
-              {/* --- DESKTOP NAV --- */}
-              {!isMobile && (
+              {isClient && !isMobile && (
                 <ul style={styles.navList}>
                   <li style={styles.navItem}>
                     <Link href="/">Home</Link>
@@ -81,10 +75,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 </ul>
               )}
 
-              {/* --- MOBILE NAV --- */}
-              {isMobile && (
+              {isClient && isMobile && (
                 <div style={styles.mobileNavBar}>
-                  {/* Left logo */}
+                  {/* Logo left */}
                   <div style={styles.logoWrapper}>
                     <Image
                       src="/Samvaad.png"
@@ -95,12 +88,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     />
                   </div>
 
-                  {/* Right side controls */}
+                  {/* Right: profile + hamburger */}
                   <div style={styles.rightControls}>
-                    {/* User profile */}
                     <button style={styles.profileBtn}>👤</button>
-
-                    {/* Hamburger */}
                     <button
                       onClick={() => setMenuOpen((s) => !s)}
                       aria-expanded={menuOpen}
@@ -114,44 +104,32 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               )}
             </nav>
 
-            {/* Mobile Dropdown Menu */}
-            {isMobile && menuOpen && (
+            {/* Mobile dropdown menu */}
+            {isClient && isMobile && menuOpen && (
               <div style={styles.mobileMenuOverlay}>
                 <ul style={styles.mobileMenu}>
                   <li style={styles.mobileItem}>
-                    <Link href="/" onClick={onNavClick}>
-                      Home
-                    </Link>
+                    <Link href="/" onClick={onNavClick}>Home</Link>
                   </li>
                   <li style={styles.mobileItem}>
-                    <Link href="/about" onClick={onNavClick}>
-                      About
-                    </Link>
+                    <Link href="/about" onClick={onNavClick}>About</Link>
                   </li>
                   <li style={styles.mobileItem}>
-                    <Link href="/committees" onClick={onNavClick}>
-                      Committees
-                    </Link>
+                    <Link href="/committees" onClick={onNavClick}>Committees</Link>
                   </li>
                   <li style={styles.mobileItem}>
-                    <Link href="/secretariat" onClick={onNavClick}>
-                      Secretariat
-                    </Link>
+                    <Link href="/secretariat" onClick={onNavClick}>Secretariat</Link>
                   </li>
                   <li style={styles.mobileItem}>
-                    <Link href="/contact" onClick={onNavClick}>
-                      Contact
-                    </Link>
+                    <Link href="/contact" onClick={onNavClick}>Contact</Link>
                   </li>
                 </ul>
               </div>
             )}
           </header>
 
-          {/* Main content */}
           <main style={styles.mainContent}>{children}</main>
 
-          {/* Footer */}
           <footer style={styles.footer}>
             <p>&copy; 2025 MUN Conference</p>
           </footer>
