@@ -144,3 +144,37 @@ footer {
     padding: 16px;
   }
 }
+
+.slick-dots li button:before {
+  content: none !important;
+}
+
+/* Each committee name button */
+.slick-dots {
+  display: flex !important;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.slick-dots li {
+  width: auto !important;
+  height: auto !important;
+}
+
+.slick-dots li button {
+  background: #f3f4f6;   /* gray-100 */
+  border: 1px solid #d1d5db; /* gray-300 */
+  color: #1f2937;        /* gray-800 */
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.slick-dots li.slick-active button {
+  background: #1e3a8a;  /* blue-800 */
+  color: white;
+  border-color: #1e3a8a;
+}

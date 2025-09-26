@@ -1,16 +1,30 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import { motion } from "framer-motion";
 import Slider from "react-slick";
 import Image from "next/image";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
+const committees = [
+  { name: "UNSC", desc: "Security Council discussions", img: "/UNSC.png" },
+  { name: "UNHRC", desc: "Human Rights Council", img: "/UNHC.png" },
+  { name: "WHO", desc: "World Health Organization", img: "/WHO.png" },
+];
+
+const secretariat = [
+  { name: "Alice", position: "Secretary-General", img: "/alice.jpg" },
+  { name: "Bob", position: "Deputy SG", img: "/bob.jpg" },
+  { name: "Clara", position: "USG PR", img: "/clara.jpg" },
+  { name: "David", position: "USG Media", img: "/david.jpg" },
+];
+
 
 const HomePage: React.FC = () => {
   const [showSecretariat, setShowSecretariat] = useState(false);
+  const sliderRef = useRef<Slider>(null);
 
   const carouselSettings = {
-    dots: true,
+    dots: false, // disable default dots
     infinite: true,
     speed: 600,
     slidesToShow: 3,
@@ -44,7 +58,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* About Section */}
-      <section className="min-h-screen flex items-center px-10 md:px-20 py-20 ">
+      <section className="min-h-screen flex items-center px-10 md:px-20 py-20">
         <div className="flex flex-col md:flex-row items-center gap-10 w-full">
           <div className="md:w-1/2 flex justify-center">
             <Image
@@ -69,20 +83,27 @@ const HomePage: React.FC = () => {
       {/* Committees Section */}
       <section className="min-h-screen py-20 px-10 md:px-20">
         <h2 className="text-4xl font-bold text-center mb-12">Committees</h2>
-        <Slider {...carouselSettings}>
+
+        {/* Carousel */}
+        <Slider {...carouselSettings} ref={sliderRef}>
           {committees.map((c, i) => (
             <div key={i} className="px-4">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="relative rounded-2xl overflow-hidden shadow-lg"
+                className="relative rounded-2xl overflow-hidden shadow-lg flex flex-col items-center"
               >
-                <Image
-                  src={c.img}
-                  alt={c.name}
-                  width={400}
-                  height={250}
-                  className="w-full h-64 object-contain scale-75"
-                />
+                {/* Portrait style card */}
+                <div className="w-64 aspect-[3/4] relative">
+                  <Image
+                    src={c.img}
+                    alt={c.name}
+                    width={250}
+                    height={400}
+                    className="object-cover rounded-2xl"
+                  />
+                </div>
+
+                {/* Overlay on hover */}
                 <div className="absolute inset-0 bg-black/70 opacity-0 hover:opacity-100 transition flex flex-col justify-center items-center text-white p-6 text-center">
                   <h3 className="text-2xl font-semibold mb-2">{c.name}</h3>
                   <p>{c.desc}</p>
@@ -91,6 +112,21 @@ const HomePage: React.FC = () => {
             </div>
           ))}
         </Slider>
+        {/* Buttons below carousel (mobile only) */}
+        <div className="block md:hidden h-8">
+          <div className="flex justify-center gap-4 mt-6 md:hidden">
+            {committees.map((c, i) => (
+              <button
+                key={i}
+                style={{ width: "120px", height: "40px" }}
+                className="bg-indigo-100 text-indigo-800 font-semibold rounded-lg hover:bg-indigo-200 transition"
+                onClick={() => sliderRef.current?.slickGoTo(i)}
+              >
+                {c.name}
+              </button>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Secretariat Section */}
@@ -115,7 +151,7 @@ const HomePage: React.FC = () => {
             {secretariat.map((s, i) => (
               <div
                 key={i}
-                className=" rounded-2xl shadow-md p-4 flex flex-col items-center text-center"
+                className="rounded-2xl shadow-md p-4 flex flex-col items-center text-center"
               >
                 <Image
                   src={s.img}
@@ -134,20 +170,5 @@ const HomePage: React.FC = () => {
     </div>
   );
 };
-
-// Example data
-const committees = [
-  { name: "UNSC", desc: "Security Council discussions", img: "/UNSC.png" },
-  { name: "UNHRC", desc: "Human Rights Council", img: "/UNHC.png" },
-  { name: "WHO", desc: "World Health Organization", img: "/WHO.png" },
-];
-
-const secretariat = [
-  { name: "Alice", position: "Secretary-General", img: "/alice.jpg" },
-  { name: "Bob", position: "Deputy SG", img: "/bob.jpg" },
-  { name: "Clara", position: "USG PR", img: "/clara.jpg" },
-  { name: "David", position: "USG Media", img: "/david.jpg" },
-];
-
 
 export default HomePage;
