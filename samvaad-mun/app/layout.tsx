@@ -10,12 +10,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const lastScrollYRef = useRef(0);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Hydration-safe flag
+  // Hydration-safe flags
   const [isClient, setIsClient] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // we are now on client
+    setIsClient(true);
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -40,8 +40,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const onNavClick = () => setMenuOpen(false);
 
   return (
-    <html lang="en">
-      <body style={{ margin: 0, padding: 0, width: "100vw", overflowX: "hidden" }}>
+    <html lang="en" style={{ margin: 0, padding: 0, width: "100%", overflowX: "hidden" }}>
+      <body style={{ margin: 0, padding: 0, width: "100%", overflowX: "hidden" }}>
         <div>
           {/* Header */}
           <header
@@ -211,7 +211,6 @@ const styles: {
     background: "#fff",
     borderTop: "1px solid rgba(0,0,0,0.06)",
     boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
-    padding: "16px",
   },
   mobileMenu: {
     listStyle: "none",
@@ -225,7 +224,9 @@ const styles: {
     padding: "8px 0",
   },
   mainContent: {
-    padding: "20px",
+    padding: 0,
+    margin: 0,
+    width: "100%",
     minHeight: "80vh",
   },
   footer: {
