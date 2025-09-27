@@ -23,7 +23,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #cd3f3f;
+    --background: #fae3d0;
     --foreground: #fbffe9;
   }
 }
@@ -75,21 +75,73 @@ a:focus-visible {
 /* ===============================
    Header / Navigation
 ================================= */
-header {
-  background: rgba(255, 255, 255, 0.24);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: var(--radius-lg);
-  padding: 12px 24px;
-  width: fit-content;
-  margin: 20px auto;
-  box-shadow: var(--shadow-lg);
-  position: sticky;
-  top: 20px;
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px 20px;
+  background: rgba(255,255,255,0.9); /* semi-transparent sheet */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 1000;
-  transition: transform 0.3s ease, background 0.4s ease;
+  transition: transform 0.28s ease-in-out, opacity 0.28s ease-in-out;
+  will-change: transform, opacity;
 }
+
+/* container inside header */
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* left logo */
+.logo-left { display: flex; align-items: center; }
+
+/* center nav (desktop) */
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-list li a {
+  text-decoration: none;
+  color: var(--color-foreground);
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+/* right profile */
+.profile-right { display: flex; align-items: center; }
+.profile-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 6px;
+}
+
+/* visible/hidden states */
+.site-header.visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.site-header.hidden {
+  transform: translateY(-120%);
+  opacity: 0;
+  pointer-events: none; /* prevents clicks while hidden */
+}
+
+/* prevent old header:hover transform from interfering (if you leave the old header block) */
+header:hover { transform: none !important; }
 
 header:hover {
   transform: translateY(-2px);
@@ -141,6 +193,7 @@ main {
   background: transparent;
   border-radius: 0;
   animation: fadeIn 0.6s ease-in-out;
+  
 }
 .hero-image {
   width: 100%;
@@ -248,6 +301,41 @@ footer a:hover {
   box-shadow: 0 0 8px rgba(30,58,138,0.6);
 }
 
+.carousel-wrapper {
+  padding-left: 1rem;   /* horizontal spacing */
+  padding-right: 1rem;
+  max-width: 1200px;    /* optional max width */
+  margin: 0 auto;       /* center container */
+  justify-content: center;
+}
+
+/* optional: give each slick slide inner padding */
+.slick-slide > div {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+/* make sure mobile still looks good */
+@media (max-width: 768px) {
+  .carousel-wrapper {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    padding-top: 3rem;
+
+  }
+}
+.rounded-card {
+  border-radius: 1rem; /* or use Tailwind: rounded-2xl */
+  overflow: hidden;    /* ensures children (images) respect rounding */
+}
+/* globals.css */
+.card {
+  border-radius: 1rem; /* rounded-2xl */
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); /* shadow-2xl */
+  overflow: visible;
+  transition-property: box-shadow;
+  transition-duration: 300ms;
+}
 /* ===============================
    Responsive Tweaks
 ================================= */
@@ -260,7 +348,9 @@ footer a:hover {
     margin: 20px;
     padding: 16px;
   }
+  
 }
-* {
-  outline: 1px solid red; /* debug mode */
-}
+
+/** {
+  outline: 1px solid red; 
+}*/

@@ -7,10 +7,10 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 const committees = [
   { name: "UNSC", desc: "Security Council discussions", img: "/UNSC.png" },
-  { name: "UNHRC", desc: "Human Rights Council", img: "/UNHC.png" },
+  { name: "UNHRC", desc: "Human Rights Council", img: "/UNHRC.png" },
   { name: "WHO", desc: "World Health Organization", img: "/WHO.png" },
-  { name: "UNDP", desc: "Development Programme", img: "/undp.png" },
-  { name: "UNESCO", desc: "Education, Science, Culture", img: "/unesco.png" },
+  { name: "UNDP", desc: "Development Programme", img: "/UNDP.png" },
+  { name: "UNESCO", desc: "Education, Science, Culture", img: "/UNESCO.png" },
 ];
 
 const secretariat = [
@@ -23,6 +23,8 @@ const secretariat = [
 const HomePage: React.FC = () => {
   const [showSecretariat, setShowSecretariat] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number>(0); // carousel index for buttons
+  const [tappedIndex, setTappedIndex] = useState<number | null>(null); // overlay toggle
   const sliderRef = useRef<Slider>(null);
 
   useEffect(() => {
@@ -37,16 +39,19 @@ const HomePage: React.FC = () => {
     infinite: true,
     speed: 600,
     autoplay: true,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 2000,
     pauseOnHover: true,
     slidesToShow: 1,
     slidesToScroll: 1,
+    centerMode: true,
+    variableWidth: true,
+    afterChange: (index: number) => setActiveIndex(index),
   };
 
   return (
     <div className="scroll-smooth">
       {/* Hero Section */}
-      <section className="w-full h-screen relative m-0 p-0 overflow-hidden">
+      <section className="w-full h-screen relative overflow-hidden">
         <Image
           src="/hero.png"
           alt="Conference Hero"
@@ -83,7 +88,7 @@ const HomePage: React.FC = () => {
             className="object-contain"
           />
         </div>
-        <div className="md:w-1/2 shadow-lg rounded-2xl p-8 text-center md:text-left bg-white">
+        <div className="md:w-1/2 shadow-2xl rounded-2xl p-8 text-center md:text-left">
           <h2 className="text-3xl font-bold mb-4">About Us</h2>
           <p className="text-gray-700 leading-relaxed">
             Welcome to the MUN Conference 2025. Delegates from across the world
@@ -99,73 +104,97 @@ const HomePage: React.FC = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="py-20 px-6 md:px-20"
+        className="pt-20 md:pt-32 px-6 md:px-20"
       >
         <h2 className="text-4xl font-bold text-center mb-12">Committees</h2>
 
-        {isMobile ? (
-          <>
+        {/* Mobile Buttons */}
+        {isMobile && (
+          <div className="flex flex-wrap justify-center gap-5 mb-10">
+            {committees.map((c, i) => (
+              <button
+                key={i}
+                className={`font-semibold rounded-lg px-4 py-2 text-sm transition-all duration-300 ${
+                  activeIndex === i
+                    ? "bg-indigo-600 text-white shadow-lg"
+                    : "bg-indigo-100 text-indigo-800"
+                }`}
+                onClick={() => sliderRef.current?.slickGoTo(i)}
+              >
+                {c.name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Carousel / Grid */}
+        <div className="carousel-wrapper px-4 md:px-20">
+          {isMobile ? (
             <Slider {...carouselSettings} ref={sliderRef}>
               {committees.map((c, i) => (
-                <div key={i} className="flex justify-center px-2">
+                <div
+                  key={i}
+                  style={{ width: 240 }}
+                  className="px-3 flex justify-center items-center"
+                >
                   <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className="relative rounded-2xl overflow-hidden shadow-lg flex flex-col items-center"
+                    whileTap={{ scale: 0.97 }}
+                    className="card cursor-pointer w-full h-80"
+                    onClick={() =>
+                      setTappedIndex(tappedIndex === i ? null : i)
+                    }
                   >
-                    <div className="w-64 aspect-[3/4] relative">
+                    <div className="card-inner relative w-full h-full overflow-hidden rounded-2xl shadow-2xl">
                       <Image
                         src={c.img}
                         alt={c.name}
-                        width={250}
-                        height={400}
-                        className="object-cover rounded-2xl"
+                        fill
+                        className={`object-contain transition duration-300 ${
+                          tappedIndex === i ? "blur-sm" : ""
+                        }`}
                       />
-                    </div>
-                    <div className="absolute inset-0 bg-black/70 opacity-0 hover:opacity-100 transition flex flex-col justify-center items-center text-white p-6 text-center">
-                      <h3 className="text-2xl font-semibold mb-2">{c.name}</h3>
-                      <p>{c.desc}</p>
+                      {tappedIndex === i && (
+                        <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-white p-6 text-center">
+                          <h3 className="text-2xl font-semibold mb-2">{c.name}</h3>
+                          <p>{c.desc}</p>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 </div>
               ))}
             </Slider>
-
-            {/* Mobile Buttons */}
-            <div className="flex flex-wrap justify-center gap-3 mt-6 md:hidden">
+          ) : (
+            <div className="grid grid-cols-3 lg:grid-cols-5 gap-8">
               {committees.map((c, i) => (
-                <button
+                <motion.div
                   key={i}
-                  className="bg-indigo-100 text-indigo-800 font-semibold rounded-lg hover:bg-indigo-200 transition px-4 py-2 text-sm"
-                  onClick={() => sliderRef.current?.slickGoTo(i)}
+                  whileHover={{ scale: 1.05 }}
+                  className="card cursor-pointer transition-transform duration-300"
+                  onClick={() =>
+                    setTappedIndex(tappedIndex === i ? null : i)
+                  }
                 >
-                  {c.name}
-                </button>
+                  <div className="card-inner relative w-full h-80 overflow-hidden rounded-2xl shadow-2xl">
+                    <Image
+                      src={c.img}
+                      alt={c.name}
+                      width={250}
+                      height={350}
+                      className="object-contain scale-90"
+                    />
+                    {tappedIndex === i && (
+                      <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-white p-6 text-center">
+                        <h3 className="text-2xl font-semibold mb-2">{c.name}</h3>
+                        <p>{c.desc}</p>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
               ))}
             </div>
-          </>
-        ) : (
-          <div className="grid grid-cols-3 lg:grid-cols-5 gap-8">
-            {committees.map((c, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ scale: 1.05 }}
-                className="relative rounded-2xl overflow-hidden shadow-lg"
-              >
-                <Image
-                  src={c.img}
-                  alt={c.name}
-                  width={250}
-                  height={350}
-                  className="object-cover w-full h-full rounded-2xl"
-                />
-                <div className="absolute inset-0 bg-black/70 opacity-0 hover:opacity-100 transition flex flex-col justify-center items-center text-white p-6 text-center">
-                  <h3 className="text-2xl font-semibold mb-2">{c.name}</h3>
-                  <p>{c.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
+          )}
+        </div>
       </motion.section>
 
       {/* Secretariat Section */}
@@ -191,7 +220,7 @@ const HomePage: React.FC = () => {
               <motion.div
                 key={i}
                 whileHover={{ y: -5 }}
-                className="rounded-2xl shadow-md p-6 flex flex-col items-center text-center bg-white"
+                className="rounded-2xl shadow-2xl p-6 flex flex-col items-center text-center bg-white"
               >
                 <Image
                   src={s.img}
